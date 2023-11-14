@@ -9,7 +9,7 @@ int main(int argc, char *argv[]){
     int n;
     char *result_str;
 
-    printf("What is your student numberxusavhxuashj");
+    printf("What is your student numberxusavhxuashj1234");
 
     if(fgets(line, 100, stdin) == NULL) {
         exit(EXIT_FAILURE);
