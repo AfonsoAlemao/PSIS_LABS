@@ -47,7 +47,7 @@ int main(){
     void (*func_2)();
 
 	// Load func_1 from the loaded library
-    *(void **) (&func_1) = dlsym(handle, "func_1");
+    func_1 = dlsym(handle, "func_1");
     if ((error = dlerror()) != NULL) {
         fprintf(stderr, "Error loading func_1: %s\n", error);
         dlclose(handle);
@@ -55,7 +55,7 @@ int main(){
     }
 
     // Load func_2 from the loaded library
-    *(void **) (&func_2) = dlsym(handle, "func_2");
+    func_2 = dlsym(handle, "func_2");
     if ((error = dlerror()) != NULL) {
         fprintf(stderr, "Error loading fsunc_2: %s\n", error);
         dlclose(handle);
