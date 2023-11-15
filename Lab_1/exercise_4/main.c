@@ -1,7 +1,8 @@
-
+#include "lib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <dlfcn.h>
 
 /* include the correct .h file */
 
@@ -10,11 +11,15 @@ int main(){
 	int a;
 	char line[100];
 	char library_name[100];
+	void *handle;
+	char *error;
 
 	printf("What version of the functions you whant to use?\n");
 	printf("\t1 - Normal    (lib1)\n");
 	printf("\t2 - Optimized (lib2)\n");
-	fgets(line, 100, stdin);
+	if(fgets(line, 100, stdin) == NULL) {
+		exit(EXIT_FAILURE);
+	}
 	sscanf(line,"%d", &a);
 	if (a == 1){
 		strcpy(library_name, "./lib1.so");
@@ -29,17 +34,42 @@ int main(){
 		}
 	}
 	/* load library from name library_name */
+	handle = dlopen(library_name, RTLD_LAZY);
+    if (!handle) {
+        fprintf(stderr, "Error opening library: %s\n", dlerror());
+        exit(EXIT_FAILURE);
+    }
 
+	dlerror();
 
 	/* declare pointers to functions */
+	void (*func_1)();
+    void (*func_2)();
 
-	/*load func_1 from loaded library */
+	// Load func_1 from the loaded library
+    *(void **) (&func_1) = dlsym(handle, "func_1");
+    if ((error = dlerror()) != NULL) {
+        fprintf(stderr, "Error loading func_1: %s\n", error);
+        dlclose(handle);
+        exit(EXIT_FAILURE);
+    }
 
-	/*load func_2 from loaded library */
+    // Load func_2 from the loaded library
+    *(void **) (&func_2) = dlsym(handle, "func_2");
+    if ((error = dlerror()) != NULL) {
+        fprintf(stderr, "Error loading fsunc_2: %s\n", error);
+        dlclose(handle);
+        exit(EXIT_FAILURE);
+    }
 
-	/* call func_1 from whichever library was loaded */
+    // Call func_1 from whichever library was loaded
+    func_1();
 
-	/* call func_2 from whichever library was loaded */
+    // Call func_2 from whichever library was loaded
+    func_2();
+
+    // Close the library
+    dlclose(handle);
 
 	exit(0);
 }
