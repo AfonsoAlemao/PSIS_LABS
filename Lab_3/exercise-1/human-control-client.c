@@ -38,7 +38,7 @@ int main()
     message_type connection;
 
     connection.ch = ch_user;
-    connection.msg_type = 1;
+    connection.msg_type = 0;
 
     if(write(fd_server, &connection, sizeof(message_type)) == -1) {
         exit(EXIT_FAILURE);
@@ -52,7 +52,7 @@ int main()
     
     int ch;
 
-    m.msg_type = 1;
+    connection.msg_type = 1;
     int n = 0;
     do
     {

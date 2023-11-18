@@ -5,7 +5,7 @@ typedef enum direction_t {UP, DOWN, LEFT, RIGHT} direction_t;
 
 typedef struct message_type {
     int ch; // character selected by the user
-    int msg_type; //1 for connection, 2 otherwise
+    int msg_type; //0 for connection, 1 otherwise
     direction_t diretion;
 } message_type;
 
