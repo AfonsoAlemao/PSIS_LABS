@@ -12,16 +12,26 @@
 
 int main(){
 
-	int fd;
+	int fd_server, fd_client;
 
-	while((fd = open("/tmp/fifo_server", O_RDONLY))== -1){
+	while((fd_server = open("/tmp/fifo_server", O_RDONLY))== -1){
 	  if(mkfifo("/tmp/fifo_server", 0666)!=0){
-			printf("problem creating the fifo\n");
+			printf("problem creating the server fifo\n");
 			exit(-1);
 	  }else{
-		  printf("fifo created\n");
+		  printf("fifo server created\n");
 	  }
 	}
+	
+	while((fd_client = open("/tmp/fifo_client", O_WRONLY))== -1){
+	  if(mkfifo("/tmp/fifo_client", 0666)!=0){
+			printf("problem creating the client fifo\n");
+			exit(-1);
+	  }else{
+		  printf("fifo client created\n");
+	  }
+	}
+
 	printf("fifo just opened\n");
 	int n;
 	char str[100];
@@ -37,7 +47,7 @@ int main(){
 
     while(1){
         
-		n = read(fd, str, 100);
+		n = read(fd_server, str, 100);
 
 		if(n<=0){
 			perror("read ");
@@ -51,10 +61,15 @@ int main(){
 
         if((func = dlsym(handle, str)) == NULL) {
 			printf("try again!\n");
+			result = -1;
 		} else {
 			// printf("%d\n", func());
 			result = func();
 			printf("%d\n", result);
+		}
+
+		if(write(fd_client, &result, sizeof(result)) == -1) {
+			exit(EXIT_FAILURE);
 		}		
         
 	}
@@ -62,5 +77,5 @@ int main(){
 	printf("fifo aberto\n");
 
 	dlclose(handle);
-    close(fd);
+    close(fd_server);
 }
