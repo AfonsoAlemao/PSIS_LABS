@@ -92,6 +92,24 @@ int main()
         
         //TODO_8
         // process connection messages
+        if(req.msg_type == 0) {
+
+            ch = req.ch;
+            pos_x = WINDOW_SIZE/2;
+            pos_y = WINDOW_SIZE/2;
+
+             /* creates a window and draws a border */
+            WINDOW * my_win = newwin(WINDOW_SIZE, WINDOW_SIZE, 0, 0);
+            box(my_win, 0 , 0);	
+            wrefresh(my_win);
+            
+            /* draw mark on new position */
+            wmove(my_win, pos_y, pos_x);
+            waddch(my_win,ch| A_BOLD);
+            wrefresh(my_win);
+
+        }
+        
 
         // TODO_11
         // process the movement message
