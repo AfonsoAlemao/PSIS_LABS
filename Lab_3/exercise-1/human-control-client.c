@@ -51,34 +51,54 @@ int main()
 
     
     int ch;
+    int arrow = 1; //1 when there is arrow/ 0 otherwise
 
     connection.msg_type = 1;
     int n = 0;
     do
     {
-    	ch = getch();		
+        arrow = 1;
+    	ch = getch();
+        connection.ch = ch;		
         n++;
         switch (ch)
         {
             case KEY_LEFT:
                 mvprintw(0,0,"%d Left arrow is pressed", n);
+                connection.diretion = 2;
                 break;
             case KEY_RIGHT:
                 mvprintw(0,0,"%d Right arrow is pressed", n);
+                connection.diretion = 3;
                 break;
             case KEY_DOWN:
                 mvprintw(0,0,"%d Down arrow is pressed", n);
+                connection.diretion = 1;
                 break;
             case KEY_UP:
                 mvprintw(0,0,"%d :Up arrow is pressed", n);
+                connection.diretion = 0;
                 break;
             default:
                 ch = 'x';
+                connection.ch = ch;
+                connection.msg_type = 0;
+                arrow = 0;
                     break;
         }
         refresh();			/* Print it on to the real screen */
         //TODO_9
         // prepare the movement message
+        if(arrow == 0) {
+            continue;
+        }
+
+        connection.msg_type = 1;
+
+        if(write(fd_server, &connection, sizeof(message_type)) == -1) {
+            exit(EXIT_FAILURE);
+        }
+
 
         //TODO_10
         //send the movement message
