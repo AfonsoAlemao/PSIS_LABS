@@ -72,6 +72,8 @@ int main()
     int ch;
     int pos_x;
     int pos_y;
+    int n;
+    message_type req;
 
 
 
@@ -81,6 +83,12 @@ int main()
     {
         // TODO_7
         // receive message from the clients
+        n = read(fd_server, &req, sizeof(message_type));
+
+		if(n<=0){
+			perror("read ");
+			exit(-1);
+		}
         
         //TODO_8
         // process connection messages
