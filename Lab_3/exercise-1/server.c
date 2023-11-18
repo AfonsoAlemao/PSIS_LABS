@@ -41,10 +41,19 @@ void new_position(int* x, int *y, direction_t direction){
 
 int main()
 {	
-    
+    int fd_server;
 
 	// TODO_3
     // create and open the FIFO for reading
+
+    while((fd_server = open(FIFO_NAME, O_RDONLY))== -1){
+	  if(mkfifo("/tmp/fifo_server", 0666)!=0){
+			printf("problem creating the server fifo\n");
+			exit(-1);
+	  }else{
+		  printf("fifo server created\n");
+	  }
+	}
 
 
     // ncurses initialization
