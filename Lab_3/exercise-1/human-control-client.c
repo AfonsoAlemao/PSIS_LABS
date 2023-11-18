@@ -11,18 +11,34 @@
 int main()
 {
 
-
+    int fd_server;
+    char ch_user;
    
     //TODO_4
     // create and open the FIFO for writing
-
+    while((fd_server = open(FIFO_NAME, O_WRONLY))== -1){
+	  if(mkfifo("/tmp/fifo_server", 0666)!=0){
+			printf("problem creating the server fifo\n");
+			exit(-1);
+	  }else{
+		  printf("fifo server created\n");
+	  }
+	}
+	printf("fifo server just opened for writing\n");
 
     //TODO_5
     // read the character from the user
+    printf("Choose function and an argument:");
+    if((ch_user = fget()) == NULL) {
+        exit(EXIT_FAILURE);
+    }
 
     // TODO_6
     // send connection message
+    message_type connection;
 
+    connection.ch = ch_user;
+    
 
 
 	initscr();			/* Start curses mode 		*/

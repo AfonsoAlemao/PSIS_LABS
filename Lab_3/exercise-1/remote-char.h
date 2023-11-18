@@ -3,16 +3,11 @@
 
 typedef enum direction_t {UP, DOWN, LEFT, RIGHT} direction_t;
 
-typedef struct connection {
+typedef struct message_type {
     int ch; // character selected by the user
-} connection;
-
-
-typedef struct movement {
-    int ch; // character selected by the user
+    int msg_type;
     direction_t diretion;
-} movement;
-
+} message_type;
 
 // TODO_2
 //declaration of the FIFO location
