@@ -38,8 +38,11 @@ int main()
     message_type connection;
 
     connection.ch = ch_user;
-    
+    connection.msg_type = 1;
 
+    if(write(fd_server, &connection, sizeof(message_type)) == -1) {
+        exit(EXIT_FAILURE);
+    }
 
 	initscr();			/* Start curses mode 		*/
 	cbreak();				/* Line buffering disabled	*/
