@@ -95,7 +95,7 @@ int main()
             pos_x = WINDOW_SIZE/2;
             pos_y = WINDOW_SIZE/2;
 
-            wmove(my_win, pos_y, pos_x);
+            wmove(my_win,  pos_x, pos_y);
             waddch(my_win,' ');
 
             ch = req.ch;
@@ -105,7 +105,7 @@ int main()
             // TODO_11
             // process the movement message
             /*deletes old place */
-            wmove(my_win, pos_y, pos_x);
+            wmove(my_win,  pos_x, pos_y);
             waddch(my_win,' ');
 
             /* claculates new mark position */
