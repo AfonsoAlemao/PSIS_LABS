@@ -77,7 +77,6 @@ int main()
                 connection.diretion = 0;
                 break;
             default:
-                connection.msg_type = 0;
                 arrow = 0;
                     break;
         }
