@@ -113,6 +113,21 @@ int main()
 
         // TODO_11
         // process the movement message
+
+        if (req.msg_type == 1) { //movement type
+
+            /*deletes old place */
+            wmove(my_win, pos_y, pos_x);
+            waddch(my_win,' ');
+
+            /* claculates new mark position */
+            new_position(&pos_x, &pos_y, req.diretion);
+
+            /* draw mark on new position */
+            wmove(my_win, pos_y, pos_x);
+            waddch(my_win,ch| A_BOLD);
+            wrefresh(my_win);
+        }
         
         /* draw mark on new position */
         wmove(my_win, pos_x, pos_y);
