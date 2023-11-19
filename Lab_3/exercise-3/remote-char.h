@@ -13,3 +13,12 @@ typedef struct message_type {
 //declaration of the FIFO location
 
 #define FIFO_NAME "/tmp/fifo_server"
+
+
+//STEP 1
+
+typedef struct element_user {
+    int ch; // character selected by the user
+    int pos_x;
+    int pos_y;
+} element_user;

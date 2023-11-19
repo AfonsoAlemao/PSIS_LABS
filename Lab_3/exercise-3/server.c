@@ -71,11 +71,11 @@ int main()
 	wrefresh(my_win);
 
     /* information about the character */
-    int ch = 'x';
-    int pos_x;
-    int pos_y;
     int n;
     message_type req;
+    element_user elements[128];
+    int n_clients = -1;
+    int i = 0;
 
     while (1)
     {
@@ -91,30 +91,38 @@ int main()
         //TODO_8
         // process connection messages
         if(req.msg_type == 0) {
-            
-            pos_x = WINDOW_SIZE/2;
-            pos_y = WINDOW_SIZE/2;
 
-            wmove(my_win,  pos_x, pos_y);
+            n_clients++;
+            elements[n_clients].ch = req.ch;
+            
+            elements[n_clients].pos_x = WINDOW_SIZE/2;
+            elements[n_clients].pos_y = WINDOW_SIZE/2;
+
+            wmove(my_win,  elements[n_clients].pos_x, elements[n_clients].pos_y);
             waddch(my_win,' ');
-
-            ch = req.ch;
-            
+            i = n_clients;
 
         } else if (req.msg_type == 1) { //movement type
             // TODO_11
             // process the movement message
             /*deletes old place */
-            wmove(my_win,  pos_x, pos_y);
+
+            for(i = 0; i < n_clients; i++) {
+                if(elements[i].ch == req.ch) {
+                    break;
+                }
+            }
+
+            wmove(my_win,  elements[i].pos_x, elements[i].pos_y);
             waddch(my_win,' ');
 
             /* claculates new mark position */
-            new_position(&pos_x, &pos_y, req.diretion);
+            new_position(&(elements[i].pos_x), &(elements[i].pos_y), req.diretion);
         }
         
         /* draw mark on new position */
-        wmove(my_win, pos_x, pos_y);
-        waddch(my_win,ch| A_BOLD);
+        wmove(my_win, elements[i].pos_x, elements[i].pos_y);
+        waddch(my_win, elements[i].ch| A_BOLD);
         wrefresh(my_win);			
     }
   	endwin();			/* End curses mode		  */
