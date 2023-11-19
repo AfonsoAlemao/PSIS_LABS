@@ -56,7 +56,7 @@ int main(){
 			exit(-1);
 		}
 
-		printf("%d", req.arg);
+		// printf("%d", req.arg);
 
 		if(req.funct_type == 0) {
 			
