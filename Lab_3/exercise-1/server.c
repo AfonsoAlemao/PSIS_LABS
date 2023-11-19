@@ -5,6 +5,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>  
+#include <stdlib.h>
+
 #define WINDOW_SIZE 15
 
 direction_t random_direction(){
@@ -69,15 +71,11 @@ int main()
 	wrefresh(my_win);
 
     /* information about the character */
-    int ch;
+    int ch = 'x';
     int pos_x;
     int pos_y;
     int n;
     message_type req;
-
-
-
-    direction_t  direction;
 
     while (1)
     {
@@ -89,44 +87,29 @@ int main()
 			perror("read ");
 			exit(-1);
 		}
-        
+
         //TODO_8
         // process connection messages
         if(req.msg_type == 0) {
-
-            ch = req.ch;
+            
             pos_x = WINDOW_SIZE/2;
             pos_y = WINDOW_SIZE/2;
 
-             /* creates a window and draws a border */
-            WINDOW * my_win = newwin(WINDOW_SIZE, WINDOW_SIZE, 0, 0);
-            box(my_win, 0 , 0);	
-            wrefresh(my_win);
-            
-            /* draw mark on new position */
             wmove(my_win, pos_y, pos_x);
-            waddch(my_win,ch| A_BOLD);
-            wrefresh(my_win);
+            waddch(my_win,' ');
 
-        }
-        
+            ch = req.ch;
+            
 
-        // TODO_11
-        // process the movement message
-
-        if (req.msg_type == 1) { //movement type
-
+        } else if (req.msg_type == 1) { //movement type
+            // TODO_11
+            // process the movement message
             /*deletes old place */
             wmove(my_win, pos_y, pos_x);
             waddch(my_win,' ');
 
             /* claculates new mark position */
             new_position(&pos_x, &pos_y, req.diretion);
-
-            /* draw mark on new position */
-            wmove(my_win, pos_y, pos_x);
-            waddch(my_win,ch| A_BOLD);
-            wrefresh(my_win);
         }
         
         /* draw mark on new position */

@@ -4,8 +4,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>  
- #include <ctype.h> 
- #include <stdlib.h>
+#include <ctype.h> 
+#include <stdlib.h>
  
 
 int main()
@@ -28,10 +28,8 @@ int main()
 
     //TODO_5
     // read the character from the user
-    printf("Choose function and an argument:");
-    if((ch_user = fget()) == NULL) {
-        exit(EXIT_FAILURE);
-    }
+    printf("Choose your character:");
+    ch_user = getchar();
 
     // TODO_6
     // send connection message
@@ -58,8 +56,7 @@ int main()
     do
     {
         arrow = 1;
-    	ch = getch();
-        connection.ch = ch;		
+    	ch = getch();		
         n++;
         switch (ch)
         {
@@ -80,8 +77,6 @@ int main()
                 connection.diretion = 0;
                 break;
             default:
-                ch = 'x';
-                connection.ch = ch;
                 connection.msg_type = 0;
                 arrow = 0;
                     break;
@@ -95,14 +90,13 @@ int main()
 
         connection.msg_type = 1;
 
+        //TODO_10
+        //send the movement message
+
         if(write(fd_server, &connection, sizeof(message_type)) == -1) {
             exit(EXIT_FAILURE);
         }
 
-
-        //TODO_10
-        //send the movement message
-        
     }while(ch != 27);
     
     
