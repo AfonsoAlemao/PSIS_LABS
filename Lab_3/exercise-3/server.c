@@ -9,6 +9,8 @@
 
 #define WINDOW_SIZE 15
 
+#define NUM_POSSIBLE_CHARACTERS 128 /* ASCII characters available */
+
 direction_t random_direction(){
     return  random()%4;
 
@@ -44,6 +46,8 @@ void new_position(int* x, int *y, direction_t direction){
 int main()
 {	
     int fd_server;
+    int k = 0, delete_char = 1;
+    char character_to_add = ' ';
 
 	// TODO_3
     // create and open the FIFO for reading
@@ -71,9 +75,8 @@ int main()
 	wrefresh(my_win);
 
     /* information about the character */
-    int ch = 'x';
-    int pos_x;
-    int pos_y;
+    character_information client_char[NUM_POSSIBLE_CHARACTERS];
+
     int n;
     message_type req;
 
@@ -92,29 +95,45 @@ int main()
         // process connection messages
         if(req.msg_type == 0) {
             
-            pos_x = WINDOW_SIZE/2;
-            pos_y = WINDOW_SIZE/2;
+            client_char[req.ch].pos_x = WINDOW_SIZE/2;
+            client_char[req.ch].pos_y = WINDOW_SIZE/2;
 
-            wmove(my_win,  pos_x, pos_y);
-            waddch(my_win,' ');
+            // wmove(my_win, client_char[req.ch].pos_x, client_char[req.ch].pos_y);
+            // waddch(my_win,' ');
 
-            ch = req.ch;
+            client_char[req.ch].ch = req.ch;
             
 
         } else if (req.msg_type == 1) { //movement type
             // TODO_11
             // process the movement message
-            /*deletes old place */
-            wmove(my_win,  pos_x, pos_y);
-            waddch(my_win,' ');
+            /* deletes old place */
+            wmove(my_win, client_char[req.ch].pos_x, client_char[req.ch].pos_y);
+
+            character_to_add = ' ';
+            /* Change: only delete if none of other chars are in this place */
+            for (k = 0; k < NUM_POSSIBLE_CHARACTERS; k++) {
+                if (client_char[req.ch].pos_x == client_char[k].pos_x &&
+                client_char[req.ch].pos_y == client_char[k].pos_y && 
+                req.ch != k) {
+                    delete_char = 0; 
+                    character_to_add = (char)k;
+                    break;
+                }
+            }
+
+            waddch(my_win,character_to_add);
+            
+            delete_char = 1;
+            
 
             /* claculates new mark position */
-            new_position(&pos_x, &pos_y, req.diretion);
+            new_position(&(client_char[req.ch].pos_x), &(client_char[req.ch].pos_y), req.diretion);
         }
         
         /* draw mark on new position */
-        wmove(my_win, pos_x, pos_y);
-        waddch(my_win,ch| A_BOLD);
+        wmove(my_win, client_char[req.ch].pos_x, client_char[req.ch].pos_y);
+        waddch(my_win, client_char[req.ch].ch| A_BOLD);
         wrefresh(my_win);			
     }
   	endwin();			/* End curses mode		  */

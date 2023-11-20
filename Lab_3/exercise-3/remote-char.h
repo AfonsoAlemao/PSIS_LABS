@@ -13,3 +13,9 @@ typedef struct message_type {
 //declaration of the FIFO location
 
 #define FIFO_NAME "/tmp/fifo_server"
+
+typedef struct character_information {
+    int pos_x; 
+    int pos_y; 
+    char ch;
+} character_information;
