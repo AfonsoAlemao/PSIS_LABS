@@ -46,7 +46,7 @@ void new_position(int* x, int *y, direction_t direction){
 int main()
 {	
     int fd_server;
-    int k = 0, delete_char = 1;
+    int k = 0;
     char character_to_add = ' ';
 
 	// TODO_3
@@ -116,16 +116,13 @@ int main()
                 if (client_char[req.ch].pos_x == client_char[k].pos_x &&
                 client_char[req.ch].pos_y == client_char[k].pos_y && 
                 req.ch != k) {
-                    delete_char = 0; 
                     character_to_add = (char)k;
                     break;
                 }
             }
 
             waddch(my_win,character_to_add);
-            
-            delete_char = 1;
-            
+                        
 
             /* claculates new mark position */
             new_position(&(client_char[req.ch].pos_x), &(client_char[req.ch].pos_y), req.diretion);
