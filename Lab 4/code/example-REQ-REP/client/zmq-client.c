@@ -26,8 +26,8 @@ int main (void)
         printf ("Sending number %d...\n", n);
         send = zmq_send (requester, &n, sizeof(n), 0);
         assert(send != -1);
-        //recv = zmq_recv (requester, &n, sizeof(n), 0);
-        //assert(recv != -1);
+        recv = zmq_recv (requester, &n, sizeof(n), 0);
+        assert(recv != -1);
         printf ("Received number %d\n", n);
     }
     zmq_close (requester);
