@@ -1,15 +1,21 @@
 //  Hello World client
-#include <zmq.h>
+#include <zmq.h> 
 #include <string.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <assert.h>
 
 int main (void)
 {
     printf ("Connecting to hello world server…\n");
     void *context = zmq_ctx_new ();
+    assert(context != NULL);
     void *requester = zmq_socket (context, ZMQ_REQ);
-    zmq_connect (requester, "ipc:///tmp/s1");
+    assert(requester != NULL);
+    int rc = zmq_connect (requester, "ipc:///tmp/s1");
+    assert(rc == 0);
+
+    size_t send, recv;
 
     while(1) {
         int n;
@@ -18,8 +24,10 @@ int main (void)
         printf("type an integer ");
         scanf("%d", &n);
         printf ("Sending number %d...\n", n);
-        zmq_send (requester, &n, sizeof(n), 0);
-        zmq_recv (requester, &n, sizeof(n), 0);
+        send = zmq_send (requester, &n, sizeof(n), 0);
+        assert(send != -1);
+        //recv = zmq_recv (requester, &n, sizeof(n), 0);
+        //assert(recv != -1);
         printf ("Received number %d\n", n);
     }
     zmq_close (requester);
