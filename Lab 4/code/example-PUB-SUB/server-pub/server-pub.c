@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <unistd.h>
-
+ 
 int main (void)
 {
     void *context = zmq_ctx_new ();

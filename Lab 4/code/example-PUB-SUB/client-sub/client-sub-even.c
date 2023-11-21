@@ -9,7 +9,7 @@ int main (int argc, char *argv [])
     void *context = zmq_ctx_new ();
     void *subscriber = zmq_socket (context, ZMQ_SUB);
     zmq_connect (subscriber, "tcp://localhost:5556");
-    zmq_setsockopt (subscriber, ZMQ_SUBSCRIBE,"odd", 3);
+    zmq_setsockopt (subscriber, ZMQ_SUBSCRIBE,"even", 3);
     while(1) {
         char *type = s_recv (subscriber);
 
