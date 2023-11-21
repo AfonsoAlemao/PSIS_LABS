@@ -24,21 +24,55 @@ int main (void){
     int rc_pub = zmq_bind (publisher, "tcp://*:5556");
     assert(rc_pub == 0);
  
-    char *recv_message, *dpt, *s;
-
+    char *recv_message, *dpt, *s, *auxiliar_msg;
+    int n_words = 0, i = 0;
+    char *department_names[10];
+    
+    for(int j = 0; j < 10; j++) {
+        department_names[j] = (char**) calloc (100, sizeof(char)); 
+    }
+    
     while (1) {
+
+        recv_message = (char*) calloc (100, sizeof(char));
+        dpt = (char*) calloc (100, sizeof(char));
+        s = (char*) calloc (100, sizeof(char));
 
         // receive messages from the microphones
         recv_message = s_recv(responder);
         assert(recv_message != NULL);
+        
+        n_words = 0;
+        for(i = 0; i < strlen(recv_message); i++) {
+            if(recv_message[i] == ' ') {
+                n_words++;
+            }
+        }
 
-        sscanf (recv_message, "%s %s", dpt, s);
+        if(n_words == 1) {
 
-        printf("department %s message %s", dpt, s); 
+            for (int kk = 0; kk < 10; kk++) {
+                strcpy(auxiliar_msg, department_names[i]);
+                strcpy(auxiliar_msg, ' ');
+                strcpy(auxiliar_msg, recv_message);
 
-        // publish message to speakers
-        s_sendmore(publisher, dpt);
-        s_send (publisher, s);
+                sscanf (recv_message, "%s %s", dpt, s);
+                printf("department %s message %s", dpt, s);  
+                // publish message to speakers
+                s_sendmore(publisher, dpt);
+                s_send (publisher, s);
+            }
+        } else if(n_words == 2) {
+            sscanf (recv_message, "%s %s", dpt, s);
+            printf("department %s message %s", dpt, s);  
+            // publish message to speakers
+            s_sendmore(publisher, dpt);
+            s_send (publisher, s);
+        } 
+
+        free(recv_message);
+        free(dpt);
+        free(s);
 
     }
 

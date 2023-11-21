@@ -21,9 +21,14 @@ int main(){
      
     char message[100], *dpt, *string, *recv_msg;
 
+    
 
     while(1){
-
+        
+        recv_msg = (char*) calloc (100, sizeof(char));
+        dpt = (char*) calloc (100, sizeof(char));
+        string = (char*) calloc (100, sizeof(char));
+        
         // receive messages
         recv_msg = s_recv(subscriber);
         assert(recv_msg != NULL);
@@ -31,9 +36,13 @@ int main(){
         sscanf (message, "%s %s", dpt, string);
 
         printf("message from  %s - %s", dpt, string);
+
         free(string);
+        free(dpt);
+        free(recv_msg);
         
     }
+
     zmq_close (subscriber);
     zmq_ctx_destroy (context);
     return 0;
