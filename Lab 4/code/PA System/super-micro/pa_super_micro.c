@@ -17,7 +17,8 @@ int main(){
 
     size_t send;
     
-    char message[100];
+    char message[100], *recv;
+    
     while(1){
 
         printf("Please write the message to your students and staff! ");
@@ -28,6 +29,11 @@ int main(){
         printf("Forwarding this message to all: %s", message);
         send = s_send (requester, message);
         assert(send != -1);
+
+        recv = s_recv(requester);
+        assert(recv != NULL);
+        printf("\n%s\n", recv);
+        fflush(stdout);
 
     }
 

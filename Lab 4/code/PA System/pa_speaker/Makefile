@@ -1,5 +1,7 @@
 all: pa_speaker
 
-
-pa_micro: pa_speaker.c
+pa_speaker:
 	gcc pa_speaker.c -o pa_speaker -lzmq
+
+clean:
+	rm -f pa_speaker

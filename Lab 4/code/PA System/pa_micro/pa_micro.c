@@ -19,7 +19,7 @@ int main(){
     int rc = zmq_connect (requester, "ipc:///tmp/s1");
     assert(rc == 0);
      
-    char message[100];
+    char message[100], *recv;
     size_t send;
 
     while(1){
@@ -27,15 +27,17 @@ int main(){
         printf("Please write the message to the students and staff on your buildings! ");
         fgets(message, 100, stdin);
 
-        // add department to message
-        strcat(message, ' ');
-        strcat(message, dpt_name);
+        send = s_sendmore(requester, dpt_name);
 
         //send message to server
         send = s_send(requester, message);
         assert(send != -1);
 
         printf("Forwarding this message to all: %s", message);
-        
+
+        recv = s_recv(requester);
+        assert(recv != NULL);
+        printf("\n%s\n", recv);
+
     }
 }

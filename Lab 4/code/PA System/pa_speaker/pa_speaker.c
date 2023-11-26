@@ -7,7 +7,7 @@ int main(){
     char dpt_name[100];
     printf("What is the department of this building? (DEEC, DEI, ...)");
     fgets(line, 100, stdin);
-    sscanf(line, "%s", &dpt_name);
+    sscanf(line, "%s", dpt_name);
     printf("We will broadcast all messages from the president of IST and %s\n", dpt_name);
 
 
@@ -17,31 +17,30 @@ int main(){
     zmq_connect (subscriber, "tcp://localhost:5556");
     
     // subscribe to topics
-    zmq_setsockopt (subscriber, ZMQ_SUBSCRIBE,"odd", 3);
+    zmq_setsockopt (subscriber, ZMQ_SUBSCRIBE, dpt_name, 3);
      
-    char message[100], *dpt, *string, *recv_msg;
+    char *dpt, *string, *recv_msg, *type;
 
-    
+    recv_msg = (char*) calloc (100, sizeof(char));
+    dpt = (char*) calloc (100, sizeof(char));
+    string = (char*) calloc (100, sizeof(char));
 
     while(1){
-        
-        recv_msg = (char*) calloc (100, sizeof(char));
-        dpt = (char*) calloc (100, sizeof(char));
-        string = (char*) calloc (100, sizeof(char));
-        
+
         // receive messages
+        dpt = s_recv(subscriber);
+        assert(dpt != NULL);
         recv_msg = s_recv(subscriber);
         assert(recv_msg != NULL);
-        strcpy(message, recv_msg);
-        sscanf (message, "%s %s", dpt, string);
 
-        printf("message from  %s - %s", dpt, string);
+        printf("message from  %s - %s", dpt, recv_msg); 
+        fflush(stdout);
+         
+    }                
 
-        free(string);
-        free(dpt);
-        free(recv_msg);
-        
-    }
+    free(string);
+    free(dpt);
+    free(recv_msg);
 
     zmq_close (subscriber);
     zmq_ctx_destroy (context);
