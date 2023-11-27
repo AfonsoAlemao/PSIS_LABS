@@ -4,8 +4,13 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include "zhelpers.h"
 #include <fcntl.h>  
 #include <stdlib.h>
+#include <zmq.h> 
+#include <string.h>
+#include <stdio.h>
+#include <assert.h> 
 
 #define WINDOW_SIZE 15 
 
@@ -65,19 +70,12 @@ int main()
     //STEP 2
     ch_info_t char_data[100];
     int n_chars = 0;
-
-
-    int fd;
     remote_char_t m;
-	while((fd = open(FIFO_NAME, O_RDONLY))== -1){
-	    if(mkfifo(FIFO_NAME, 0666)!=0){
-			printf("problem creating the fifo\n");
-			exit(-1);
-	    }else{
-		    printf("fifo created\n");
-	    }
-	}
-	printf("fifo just opened\n");
+
+    void *context = zmq_ctx_new ();
+    void *subscriber = zmq_socket (context, ZMQ_SUB);
+    zmq_connect (subscriber, "tcp://127.0.0.1:5556");
+    zmq_setsockopt (subscriber, ZMQ_SUBSCRIBE,"request", 3);
 
 	initscr();		    	
 	cbreak();				
@@ -97,8 +95,10 @@ int main()
     direction_t  direction;
     while (1)
     {
+        char *type = s_recv (subscriber);
 
-        read(fd, &m, sizeof(remote_char_t));
+        zmq_recv (subscriber, &m, sizeof(remote_char_t), 0);
+
         if(m.msg_type == 0){
             ch = m.ch;
             pos_x = WINDOW_SIZE/2;
@@ -134,7 +134,9 @@ int main()
         /* draw mark on new position */
         wmove(my_win, pos_x, pos_y);
         waddch(my_win,ch| A_BOLD);
-        wrefresh(my_win);			
+        wrefresh(my_win);
+
+        free(type);			
     }
   	endwin();			/* End curses mode		  */
 
