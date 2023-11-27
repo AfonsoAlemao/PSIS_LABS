@@ -7,23 +7,19 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <ctype.h>
+#include <zmq.h> 
+#include <string.h>
+#include <stdio.h>
+#include <assert.h> 
+
 
 int main()
 {	 
 
-    //TODO_4
-    // create and open the FIFO for writing
-
-    int fd;
-    while((fd = open(FIFO_NAME, O_WRONLY))== -1){
-	  if(mkfifo(FIFO_NAME, 0666)!=0){
-			printf("problem creating the fifo\n");
-			exit(-1);
-	  }else{
-		  printf("fifo created\n");
-	  }
-	}
-	printf("fifo just opened\n");
+    void *context = zmq_ctx_new ();
+    void *publisher = zmq_socket (context, ZMQ_PUB);
+    int rc = zmq_bind (publisher, "tcp://*:5556");
+    assert(rc == 0);
 
     //TODO_5
     // read the character from the user
@@ -39,7 +35,10 @@ int main()
     remote_char_t m;
     m.msg_type = 0;
     m.ch = ch;
-    write(fd, &m, sizeof(remote_char_t));
+    char *req = "request";
+
+    zmq_send (publisher, req, strlen(req), ZMQ_SNDMORE);
+    zmq_send (publisher, &m, sizeof(remote_char_t), 0);
     
     
 
@@ -75,9 +74,12 @@ int main()
 
         //TODO_10
         //send the movement message
-        write(fd, &m, sizeof(m));
+        zmq_send (publisher, req, strlen(req), ZMQ_SNDMORE);
+        zmq_send (publisher, &m, sizeof(remote_char_t), 0);
     }
 
+    zmq_close (publisher);
+    zmq_ctx_destroy (context);
  
 	return 0;
 }
