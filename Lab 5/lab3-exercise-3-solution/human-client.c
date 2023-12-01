@@ -18,9 +18,11 @@ int main()
 
 
     void *context = zmq_ctx_new ();
-    void *publisher = zmq_socket (context, ZMQ_PUB);
-    int rc = zmq_bind (publisher, "tcp://*:5556");
+    void *requester = zmq_socket (context, ZMQ_REQ);
+    assert(requester != NULL);
+    int rc = zmq_connect (requester, "tcp://127.0.0.1:5556");
     assert(rc == 0);
+
 
     //TODO_5
     // read the character from the user
@@ -37,10 +39,10 @@ int main()
     remote_char_t m;
     m.msg_type = 0;
     m.ch = ch;
-    char *req = "request";
+    int ok = 0;
 
-    zmq_send (publisher, req, strlen(req), ZMQ_SNDMORE);
-    zmq_send (publisher, &m, sizeof(remote_char_t), 0);
+    zmq_send (requester, &m, sizeof(remote_char_t), 0);
+    zmq_recv (requester, &ok, sizeof(int), 0);
 
 
 	initscr();			/* Start curses mode 		*/
@@ -95,15 +97,15 @@ int main()
         //TODO_10
         //send the movement message
          if (key != 'x'){
-            zmq_send (publisher, req, strlen(req), ZMQ_SNDMORE);
-            zmq_send (publisher, &m, sizeof(remote_char_t), 0);
+            zmq_send (requester, &m, sizeof(remote_char_t), 0);
+            zmq_recv (requester, &ok, sizeof(int), 0);
         }
         refresh();			/* Print it on to the real screen */
     }while(key != 27);
     
     
   	endwin();			/* End curses mode		  */
-    zmq_close (publisher);
+    zmq_close (requester);
     zmq_ctx_destroy (context);
 
 	return 0;

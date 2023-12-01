@@ -36,14 +36,15 @@ int main()
     remote_char_t m;
     m.msg_type = 0;
     m.ch = ch;
-
+    int ok = 0;
+    
     zmq_send (requester, &m, sizeof(remote_char_t), 0);
+    zmq_recv (requester, &ok, sizeof(int), 0);
 
     int sleep_delay;
     direction_t direction;
     int n = 0;
-    int ok = 0;
-
+    
     while (1)
     {
         n++;
