@@ -4,7 +4,6 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "zhelpers.h"
 #include <fcntl.h>  
 #include <stdlib.h>
 #include <zmq.h> 
@@ -73,9 +72,11 @@ int main()
     remote_char_t m;
 
     void *context = zmq_ctx_new ();
-    void *subscriber = zmq_socket (context, ZMQ_SUB);
-    zmq_connect (subscriber, "tcp://127.0.0.1:5556");
-    zmq_setsockopt (subscriber, ZMQ_SUBSCRIBE,"request", 3);
+    assert(context != NULL);
+     void *responder = zmq_socket (context, ZMQ_REP);
+    assert(responder != NULL);
+    int rc = zmq_bind (responder, "tcp://*:5556");
+    assert (rc == 0);
 
 	initscr();		    	
 	cbreak();				
@@ -91,13 +92,14 @@ int main()
     int pos_x;
     int pos_y;
 
+    int ok = 1;
+
 
     direction_t  direction;
     while (1)
     {
-        char *type = s_recv (subscriber);
-
-        zmq_recv (subscriber, &m, sizeof(remote_char_t), 0);
+        zmq_recv (responder, &m, sizeof(remote_char_t), 0);
+        zmq_send (responder, &ok, sizeof(int), 0);
 
         if(m.msg_type == 0){
             ch = m.ch;
@@ -134,9 +136,7 @@ int main()
         /* draw mark on new position */
         wmove(my_win, pos_x, pos_y);
         waddch(my_win,ch| A_BOLD);
-        wrefresh(my_win);
-
-        free(type);			
+        wrefresh(my_win);		
     }
   	endwin();			/* End curses mode		  */
 
