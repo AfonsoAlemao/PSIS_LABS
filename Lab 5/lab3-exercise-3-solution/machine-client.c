@@ -19,7 +19,7 @@ int main()
     void *context = zmq_ctx_new ();
     void *requester = zmq_socket (context, ZMQ_REQ);
     assert(requester != NULL);
-    int rc = zmq_connect (requester, "tcp://127.0.0.1:5556");
+    int rc = zmq_connect (requester, "tcp://127.0.0.1:5560");
     assert(rc == 0);
 
     //TODO_5
