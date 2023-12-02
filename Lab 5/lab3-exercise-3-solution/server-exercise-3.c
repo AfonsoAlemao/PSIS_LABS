@@ -93,6 +93,7 @@ int main()
 
     int ok = 1;
     char *position = "position";
+    msg_publisher.n_chars = 0;
 
 
     direction_t  direction;

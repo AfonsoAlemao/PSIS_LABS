@@ -61,7 +61,6 @@ int find_ch_info(ch_info_t char_data[], int n_char, int ch){
 
 int main()
 {	
-    
        
     //STEP 2
     remote_display_msg msg_subscriber;
@@ -95,13 +94,15 @@ int main()
     while (1)
     {
         char *type = s_recv (subscriber);
-        zmq_recv (subscriber, &msg_subscriber, sizeof(remote_display_msg), 0); 
+        zmq_recv (subscriber, &msg_subscriber, sizeof(remote_display_msg), 0);
+
 
         if(new == 0) {
             new = 1;
 
             for(int jj = 0; jj < msg_subscriber.n_chars; jj++) {
-                
+
+                n_chars++;
                 char_data[jj] = msg_subscriber.char_data[jj];
                 
                 pos_x = char_data[jj].pos_x;
