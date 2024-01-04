@@ -1,0 +1,14 @@
+syntax = "proto2";
+ 
+
+enum EnumType {
+  ENUM_ONE = 0;
+  ENUM_TWO = 1;
+}
+
+message Simple_message {
+  required string str_value = 1;
+  optional int32 int_number = 2 [default = 10];
+  repeated float float_array = 3;
+  optional EnumType enum_value = 4;
+}

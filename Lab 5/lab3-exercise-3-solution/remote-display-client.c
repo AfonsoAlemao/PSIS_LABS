@@ -109,7 +109,6 @@ int main()
         
     }
 
-
     password[i] = '\0'; // Null-terminate the string
 
     // Restore terminal settings

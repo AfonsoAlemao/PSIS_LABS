@@ -1,0 +1,32 @@
+// https://protobuf.dev/programming-guides/proto3/
+
+syntax = "proto2";
+
+message ball_draw_display_msg { 
+  required bytes ch = 1;
+  required uint32 x = 2;
+  required uint32 y = 3;
+}
+
+// TODO 1 - define a message (payperview_req) with the client name 
+//         and the credit card number (also a string)
+
+message payperview_req {
+  required string client_name = 1;
+  required string credit_number = 2;
+}
+
+
+// TODO 1 - define a message (payperview_resp) with the 
+//         secret to the remote-display-client
+
+message payperview_resp {
+  required uint32 random_secret = 1;
+}
+
+// TODO 6 - define the client_connection_req message
+//          that will serialize initial client message
+
+
+// TODO 9 - define the movement_req message 
+//          that will serialize the movements of balls
